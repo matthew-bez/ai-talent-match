@@ -13,3 +13,11 @@ enum ApplicationStatus {
   REVIEWED
   REJECTED
 }
+
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERNSHIP
+  FREELANCE
+}

@@ -1,0 +1,62 @@
+// Candidate profile sub-resources. Each is a one-to-many child of User:
+// a single user can have many experiences, education entries, and certifications.
+
+model Experience {
+  id             String          @id @default(uuid())
+  userId         String          @map("user_id")
+  title          String
+  companyName    String          @map("company_name")
+  employmentType EmploymentType? @map("employment_type")
+  location       String?
+  startDate      DateTime        @map("start_date")
+  endDate        DateTime?       @map("end_date") // null while isCurrent is true
+  isCurrent      Boolean         @default(false) @map("is_current")
+  description    String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@map("experiences")
+}
+
+model Education {
+  id           String    @id @default(uuid())
+  userId       String    @map("user_id")
+  school       String
+  degree       String?
+  fieldOfStudy String?   @map("field_of_study")
+  startDate    DateTime? @map("start_date")
+  endDate      DateTime? @map("end_date")
+  grade        String?
+  description  String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@map("education")
+}
+
+model Certification {
+  id                  String    @id @default(uuid())
+  userId              String    @map("user_id")
+  name                String
+  issuingOrganization String    @map("issuing_organization")
+  issueDate           DateTime? @map("issue_date")
+  expirationDate      DateTime? @map("expiration_date")
+  credentialId        String?   @map("credential_id")
+  credentialUrl       String?   @map("credential_url")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@map("certifications")
+}
