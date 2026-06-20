@@ -1,0 +1,42 @@
+model JobPosting {
+  id              String    @id @default(uuid())
+  organizationId  String    @map("organization_id")
+  postedByUserId  String    @map("posted_by_user_id")
+  title           String
+  descriptionText String    @map("description_text")
+  targetSkills    Json?     @map("target_skills")
+  location        String?
+  status          JobStatus @default(OPEN)
+
+  organization Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  postedByUser User          @relation("UserJobPostings", fields: [postedByUserId], references: [id])
+  applications Application[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([organizationId])
+  @@index([postedByUserId])
+  @@map("job_postings")
+}
+
+model Application {
+  id                  String            @id @default(uuid())
+  jobPostingId        String            @map("job_posting_id")
+  applicantUserId     String            @map("applicant_user_id")
+  resumeId            String            @map("resume_id")
+  aiMatchScore        Int?              @map("ai_match_score")
+  aiEvaluationSummary String?           @map("ai_evaluation_summary")
+  status              ApplicationStatus @default(PENDING_AI_REVIEW)
+
+  jobPosting    JobPosting @relation(fields: [jobPostingId], references: [id], onDelete: Cascade)
+  applicantUser User       @relation("ApplicantApplications", fields: [applicantUserId], references: [id], onDelete: Cascade)
+  resume        Resume     @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([jobPostingId, applicantUserId])
+  @@index([resumeId])
+  @@map("applications")
+}

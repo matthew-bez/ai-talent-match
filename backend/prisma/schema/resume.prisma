@@ -1,0 +1,18 @@
+model Resume {
+  id               String   @id @default(uuid())
+  userId           String   @map("user_id")
+  s3ObjectKey      String   @map("s3_object_key")
+  pineconeVectorId String?  @map("pinecone_vector_id")
+  extractedText    String?  @map("extracted_text")
+  parsedSkills     Json?    @map("parsed_skills")
+  isActive         Boolean  @default(false) @map("is_active")
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applications Application[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@map("resumes")
+}

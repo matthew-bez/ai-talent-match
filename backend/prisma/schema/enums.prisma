@@ -1,0 +1,15 @@
+enum OrgRole {
+  OWNER
+  RECRUITER
+}
+
+enum JobStatus {
+  OPEN
+  CLOSED
+}
+
+enum ApplicationStatus {
+  PENDING_AI_REVIEW
+  REVIEWED
+  REJECTED
+}

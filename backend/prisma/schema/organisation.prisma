@@ -1,0 +1,29 @@
+model Organization {
+  id         String   @id @default(uuid())
+  name       String
+  industry   String?
+  websiteUrl String?  @map("website_url")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  members     OrganizationMember[]
+  jobPostings JobPosting[]
+
+  @@map("organizations")
+}
+
+model OrganizationMember {
+  id             String  @id @default(uuid())
+  userId         String  @map("user_id")
+  organizationId String  @map("organization_id")
+  orgRole        OrgRole @default(RECRUITER) @map("org_role")
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, organizationId])
+  @@index([organizationId])
+  @@map("organization_members")
+}
